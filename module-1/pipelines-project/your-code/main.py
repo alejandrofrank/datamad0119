@@ -140,7 +140,7 @@ area_poverty_ratio = []
 
 for x in area_list:
     a = PercentagePeopleBelowPovertyLevel[PercentagePeopleBelowPovertyLevel['Geographic Area'] == x]
-    area_poverty_rate = sum(a.poverty_rate)/len(a)
+    area_poverty_rate = sum(a.poverty_rate) / len(a)
     area_poverty_ratio.append(area_poverty_rate)
     
 data = pd.DataFrame({'area_list': area_list,'area_poverty_ratio':area_poverty_ratio})
@@ -149,20 +149,22 @@ datos_unidos = data.reindex(nuevo_index)
     #return datos_unidos
 
 
+# A continuacion muestro una Grafica con el ratio de pobreza que hay por Estado. 
+
 # In[19]:
 
 
-#def visual_pobrezaestado(datos_unidos):
-plt.figure(figsize=(15,10))
-sns.barplot(x=datos_unidos['area_list'], y=datos_unidos['area_poverty_ratio'])
-plt.xticks(rotation= 45)
-plt.xlabel('States')
-plt.ylabel('Poverty Rate')
-plt.title('Poverty Rate by State')
-    #return datos_unidos
+plt.figure(figsize = (15,10))
+sns.barplot(x = datos_unidos['area_list'], y = datos_unidos['area_poverty_ratio'])
+plt.xticks(rotation = 45)
+plt.xlabel('Estado')
+plt.ylabel('Ratio de pobreza')
+plt.title('Pobreza por estado')
 
 
-# In[20]:
+# La mayor cantidad de personas involucradas de tiroteos policiales, son hombres blancos. En casi todos los estados, en los unicos en los que la mayoria son negros, son estados previamente miembros de la federacion. Parte de la guerra civil estado unidense conocidos por tener la gran mayoria de esclavos negros.
+
+# In[31]:
 
 
 ShareRaceByCity.replace(['-'],0.0,inplace = True)
@@ -183,14 +185,14 @@ for i in area_list:
     share_hispanic.append(sum(x.share_hispanic) / len(x))
 
 f,ax = plt.subplots(figsize = (9,15))
-sns.barplot(x=share_white,y=area_list,color='green',alpha = 0.5,label='White' )
-sns.barplot(x=share_black,y=area_list,color='blue',alpha = 0.6,label='African American')
-sns.barplot(x=share_native_american,y=area_list,color='yellow',alpha = 0.6,label='Native American')
-sns.barplot(x=share_asian,y=area_list,color='black',alpha = 0.7,label='Asian')
-sns.barplot(x=share_hispanic,y=area_list,color='red',alpha = 0.5,label='Hispanic')
+sns.barplot(x = share_white,y = area_list,color = 'green',alpha = 0.5,label = 'White' )
+sns.barplot(x = share_black,y = area_list,color = 'blue',alpha = 0.6,label = 'African American')
+sns.barplot(x = share_native_american,y = area_list,color = 'yellow',alpha = 0.6,label='Native American')
+sns.barplot(x = share_asian,y = area_list,color = 'black',alpha = 0.7,label = 'Asian')
+sns.barplot(x = share_hispanic,y = area_list,color = 'red',alpha = 0.5,label='Hispanic')
 
-ax.legend(loc='lower right',frameon = True)
-ax.set(xlabel='Porcentaje de razas', ylabel='Estados',title = "Porcentaje de raza por Estado")
+ax.legend(loc = 'lower right',frameon = True)
+ax.set(xlabel = 'Porcentaje de razas', ylabel='Estados',title = "Porcentaje de raza por Estado")
 plt.show()
 
 
@@ -219,7 +221,9 @@ data = pd.concat([datos_unidos, datos_unidos2['area_highschool_ratio']], axis=1)
 data.sort_values('area_poverty_ratio',inplace=True)
 
 
-# In[39]:
+# En este grafico podemos observar como la pobreza disminuye por ciudad cuando hay mas escuelas/institutos. No se a que se debe esto ya que no tengo suficiente data.
+
+# In[22]:
 
 
 institutospobreza = sns.jointplot(data.area_poverty_ratio, data.area_highschool_ratio, kind = "kde", height = 7)
@@ -227,19 +231,24 @@ plt.title('Relacion entre pobreza e institutos',color = 'black',fontsize=16)
 plt.show()
 
 
-# In[29]:
+# En este grafico quiero hacer hincapie en el tipo de arma. Comprobando que las armas de fuego son una causa principal por la que ocurren tiroteos. Si se suman todas las otras causas, no suman la cantidad de tiroteos iniciadas por armas de fuego.
+# 
+
+# In[33]:
 
 
 armainvolucrada = PoliceKillingsUS.armed.value_counts()
-plt.figure(figsize=(10,7))
-sns.barplot(x = armainvolucrada[:7].index,y = armainvolucrada[:7].values)
+plt.figure(figsize=(10,9))
+sns.barplot(x = armainvolucrada[:7].index, y = armainvolucrada[:7].values)
 plt.ylabel('Numero de Armas')
 plt.xlabel('Tipos de armas')
 plt.title('Arma asesina',color = 'black',fontsize=15)
 plt.show()
 
 
-# In[42]:
+# En este grafico se puede observar que la raza blanca tiene mayor indice en iniciar un tiroteo, esto se debe a la cantidad de armas de fuego que tienen, la mayoria de los incidentes policias se inician por miedo a que el policia pueda ser asesinado por un arma de fuego.
+
+# In[24]:
 
 
 sns.countplot(data=PoliceKillingsUS, x='race')
@@ -249,7 +258,9 @@ plt.title('Raza de gente asesinada',color = 'red',fontsize=14)
 plt.show()
 
 
-# In[43]:
+# Un tercio de la poblacion de la data causó tiroteos policiales debido a una enfermedad mental. Esto es un dato muy perturbador.
+
+# In[25]:
 
 
 sns.countplot(data=PoliceKillingsUS, x='signs_of_mental_illness')
@@ -259,7 +270,7 @@ plt.title('Individuo involucrado tenia enfermedad mental',color = 'black',fontsi
 plt.show()
 
 
-# In[44]:
+# In[26]:
 
 
 sns.countplot(data=PoliceKillingsUS, x='body_camera')
@@ -269,7 +280,9 @@ plt.title('Policia utilizando camara de cuerpo',color = 'black',fontsize=16)
 plt.show()
 
 
-# In[45]:
+# Causa de muerte de los individuos, la mayoria es a causa de un disparo.
+
+# In[34]:
 
 
 sns.countplot(data=PoliceKillingsUS, x='manner_of_death')
@@ -279,7 +292,9 @@ plt.title('Causa de muerte',color = 'black',fontsize=16)
 plt.show()
 
 
-# In[51]:
+# Queria encontrar una correlacion entre fecha y mayor cantidad de tiroteos. Lo unico que encontre, es que en verano hay menos tiroteos.
+
+# In[28]:
 
 
 sns.countplot(data=PoliceKillingsUS, x='date')
